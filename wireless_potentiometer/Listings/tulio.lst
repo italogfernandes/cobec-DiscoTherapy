@@ -1,0 +1,142 @@
+C51 COMPILER V9.55   TULIO                                                                 04/18/2017 14:30:16 PAGE 1   
+
+
+C51 COMPILER V9.55, COMPILATION OF MODULE TULIO
+OBJECT MODULE PLACED IN .\Objects\tulio.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE tulio.c OPTIMIZE(8,SPEED) BROWSE INCDIR(C:\Nordic Semiconductor\nRFgo SD
+                    -K 2.3.0.10040\source_code\compiler\common;C:\Nordic Semiconductor\nRFgo SDK 2.3.0.10040\source_code\hal\nrf24le1;C:\Nord
+                    -ic Semiconductor\nRFgo SDK 2.3.0.10040\source_code\hal;C:\Nordic Semiconductor\nRFgo SDK 2.3.0.10040\source_code\compile
+                    -r;.\libraries;C:\Nordic Semiconductor\nRFgo SDK 2.3.0.10040\source_code\compiler\C51) DEBUG OBJECTEXTEND PRINT(.\Listing
+                    -s\tulio.lst) TABS(2) OBJECT(.\Objects\tulio.obj)
+
+line level    source
+
+   1          //programinha pra fazer media movel de um sinal que vc ja recebeu
+   2          //1000hz
+   3          //
+   4          #include<nrf24le1.h>
+   5          #include<timer0.h>
+   6          #include<nRF-SPIComands.h>
+   7          #include<hal_adc.h>
+   8          #include<hal_delay.h>
+   9          
+  10          #define Aquire_Freq 1000 //frequencia recebida
+  11          #define LED P04
+  12          #define MY_SUB_ADDR 0x01
+  13          #define tamanhoDaFila 50 // 1000hz de frequencia recebida, andrei disse que a media movel pode ser de 20hz
+  14          //1000 amostras por segundo, fazendo uma media movel com 
+  15          
+  16          uint16_t emg_read;
+  17          uint16_t media_movel;
+  18          uint16_t xdata FilaMedMovel[tamanhoDaFila];
+  19          uint8_t count = 0;
+  20          
+  21          void read_and_send_values();
+  22          void EnqueueDequeue (uint16_t *Fila, uint16_t NovoNumero);
+  23          
+  24          // Sensor id |  ... | data | ... |
+  25          void send_to_host(uint8_t data_msb,uint8_t data_lsb){
+  26   1        tx_buf[0] = MY_SUB_ADDR;
+  27   1        tx_buf[1] = data_msb;
+  28   1        tx_buf[2] = data_lsb;
+  29   1        TX_Mode_NOACK(3);
+  30   1        RX_Mode();
+  31   1      }
+  32          
+  33          void adc_init(){
+  34   1        hal_adc_set_input_channel(HAL_ADC_INP_AIN7);                     
+  35   1        hal_adc_set_reference(HAL_ADC_REF_VDD);                        
+  36   1        hal_adc_set_input_mode(HAL_ADC_SINGLE);                             
+  37   1        hal_adc_set_conversion_mode(HAL_ADC_SINGLE_STEP);               
+  38   1        hal_adc_set_resolution(HAL_ADC_RES_12BIT);                          
+  39   1        hal_adc_set_data_just(HAL_ADC_JUST_RIGHT);    
+  40   1      }
+  41           
+  42          void setup(){
+  43   1        P0DIR |= 1<<3;
+  44   1        P0DIR &= ~(1<<4);
+  45   1        LED = 1; delay_ms(500); LED = 0; delay_ms(500); LED = 1; delay_ms(500);
+  46   1        rf_init(ADDR_HOST,ADDR_HOST,16,RF_DATA_RATE_2Mbps,RF_TX_POWER_0dBm);
+  47   1        adc_init();
+  48   1        setup_T0_freq(Aquire_Freq,1);//Time em +-1000
+  49   1      }
+  50          
+  51          void main(){
+C51 COMPILER V9.55   TULIO                                                                 04/18/2017 14:30:16 PAGE 2   
+
+  52   1        setup();
+  53   1        while(1){
+  54   2          
+  55   2          if(timer_elapsed){
+  56   3            read_and_send_values();
+  57   3            timer_elapsed = 0;
+  58   3          }
+  59   2        }
+  60   1      }
+  61          
+  62          void read_and_send_values(){
+  63   1        hal_adc_start();                                  // Start ADconversion                                  
+             -                  
+  64   1        while(hal_adc_busy());                            // Wait for data ready    
+  65   1        emg_read = 0;
+  66   1        emg_read = hal_adc_read_LSB();                     // Read LSB of output
+  67   1        emg_read |= ((uint16_t)hal_adc_read_MSB()) << 8;   // Add MSB of output
+  68   1        
+  69   1          //fazer media que chega a 1000hz e despaixar a 100hz
+  70   1          //sessao de codigo modificada por tulio, dia 17/04
+  71   1          //fazendo calculo de uma media movel de 20hz pra ser usada na transmissao 
+  72   1        EnqueueDequeue(FilaMedMovel, emg_read); // adiciona o novo valor e remove o valor mais antigo 
+  73   1        //ou seja, move a janela da qual sera feita a media movel
+  74   1        count ++;
+  75   1        //checo se count eh 10 pq quero passar de 1000hz para 100hz,
+  76   1        //entao nao faz sentido caucular a media movel para 1000 amostras por segundo,
+  77   1        //portanto vou calcular apenas para uma a cada 10 amostras (1000hz/10 = 100hz)
+  78   1        if(count == 50)//espero count tar em 50 pra ter certeza que a fila ta cheia (nao tem zeros)
+  79   1        {
+  80   2          uint8_t i = 0;
+  81   2          for (i=0 ; i<tamanhoDaFila ; i++)
+  82   2          {//soma todos os valores da fila
+  83   3            media_movel = media_movel + FilaMedMovel[i];
+  84   3          }
+  85   2          count = count -10;//reseta o count
+  86   2          media_movel = media_movel/tamanhoDaFila;//faz a media
+  87   2          send_to_host((uint8_t) (media_movel >> 8),(uint8_t) media_movel);// envia a media dos ultimos 50 valor
+             -es 
+  88   2        }
+  89   1        
+  90   1          
+  91   1          //fazer media    
+  92   1      }
+  93          
+  94          //sessao de codigo modificada por tulio, dia 17/04
+  95          //criando um EnqueueDequeue para o array
+  96          //essa funcao remove o numero do comeco da fila (numero mais velho) e insere um numero no final da fila (n
+             -umero mais novo)
+  97          void EnqueueDequeue (uint16_t *Fila, uint16_t NovoNumero)
+  98          {//oq era 1,2,3,4,5,6,7,8
+  99   1       //vira   2,3,4,5,6,7,8,NovoNumero
+ 100   1        uint8_t i=1;
+ 101   1        for (i = 1; i< tamanhoDaFila; i++)
+ 102   1        {//transforma em 2,3,4,5,6,7,8,8
+ 103   2          Fila[i-1] = Fila[i];
+ 104   2        }
+ 105   1        //preenche a ultima posicao com o novo numero
+ 106   1        Fila[tamanhoDaFila-1] = NovoNumero;
+ 107   1      }
+ 108          
+
+
+C51 COMPILER V9.55   TULIO                                                                 04/18/2017 14:30:16 PAGE 3   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    992    ----
+   CONSTANT SIZE    =      5    ----
+   XDATA SIZE       =    165    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     11      29
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

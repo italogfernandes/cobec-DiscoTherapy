@@ -1,0 +1,6 @@
+".\Objects\tulio.obj",
+".\Objects\hal_delay.obj",
+".\Objects\hal_adc.obj" 
+TO ".\Objects\sensorEMG" 
+PRINT(".\Listings\sensorEMG.m51") RAMSIZE(256) 
+DISABLEWARNING (16) 
