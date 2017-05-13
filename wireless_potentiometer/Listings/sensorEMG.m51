@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        04/19/2017  22:25:28  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        05/05/2017  18:07:34  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  .\Objects\sensorEMG (MAIN)
             CODE    037BH     0011H     UNIT         ?PR?HAL_ADC_GET_OVERFLOW_STATUS?HAL_ADC
             CODE    038CH     0010H     UNIT         ?PR?_HAL_ADC_SET_INPUT_CHANNEL?HAL_ADC
             CODE    039CH     0010H     UNIT         ?PR?_HAL_ADC_SET_SAMPLING_RATE?HAL_ADC
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 2
 
 
             CODE    03ACH     0010H     UNIT         ?PR?_HAL_ADC_SET_POWER_DOWN_DELAY?HAL_ADC
@@ -119,7 +119,7 @@ SEGMENT                                            DATA_GROUP
   +--> ?CO?MAIN
   +--> ?PR?_RF_INIT?MAIN
   +--> ?PR?ADC_INIT?MAIN
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 3
 
 
 
@@ -179,7 +179,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   B:0080H.3       PUBLIC        P03
   C:0003H         PUBLIC        setup
   D:0088H         PUBLIC        TCON
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 4
 
 
   B:00E8H.2       PUBLIC        RFCKEN
@@ -239,7 +239,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   C:03FBH         LINE#         164
   C:0400H         LINE#         165
   C:0402H         LINE#         167
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 5
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 5
 
 
   C:0402H         LINE#         168
@@ -299,7 +299,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   C:02D9H         LINE#         235
   -------         ENDPROC       _TX_MODE_NOACK
   -------         PROC          RF_IRQ
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 6
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 6
 
 
   C:017FH         LINE#         242
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   C:008EH         LINE#         297
   C:0091H         LINE#         298
   C:0094H         LINE#         299
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 7
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 7
 
 
   C:0096H         LINE#         300
@@ -419,7 +419,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   -------         ENDPROC       MAIN
   -------         ENDMOD        MAIN
 
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 8
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 8
 
 
   -------         MODULE        HAL_DELAY
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   C:041BH         PUBLIC        hal_adc_start
   D:00D3H         PUBLIC        ADCCON1
   D:00D2H         PUBLIC        ADCCON2
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 9
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 9
 
 
   D:00D1H         PUBLIC        ADCCON3
@@ -539,7 +539,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   D:0007H         SYMBOL        tacq
   C:040FH         LINE#         62
   C:040FH         LINE#         63
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 10
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 10
 
 
   C:040FH         LINE#         64
@@ -599,7 +599,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\sensorEMG (MAIN)
   -------         MODULE        ?C?CLDPTR
   C:0204H         PUBLIC        ?C?CLDPTR
   -------         ENDMOD        ?C?CLDPTR
-BL51 BANKED LINKER/LOCATER V6.22                                                      04/19/2017  22:25:28  PAGE 11
+BL51 BANKED LINKER/LOCATER V6.22                                                      05/05/2017  18:07:34  PAGE 11
 
 
 
